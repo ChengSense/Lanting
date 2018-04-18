@@ -386,41 +386,76 @@ function scrollY() {
   }
 }
 
+function resizex() {
+  let canva = $("canvas");
+  var startx, col;
+
+  canva.mousemove(resizeing);
+
+  function resizeing(ev) {
+    var cel = getCel(ev.pageX, ev.pageY);
+    if (cel) {
+      if (col) {
+        if (Math.abs(col.x - ev.pageX) < 8) {
+          canva.css({ cursor: "col-resize" });
+          canva.mousedown(mousedown).mouseup(mouseup);
+        } else {
+          canva.css({ cursor: "default" });
+        }
+      }
+      col = cel;
+    }
+  }
+  function mousedown() {
+    startx = col.x;
+  }
+  function mouseup() {
+
+  }
+}
+
 let canva = $("canvas");
 let textarea = $("textarea");
 
 var cel = {};
 
 function action() {
-  canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
+  selectArea();
   scrollX();
   scrollY();
+  resizex();
 }
 
-function mousedown(ev) {
-  console.log(context.measureText("foo"));
-  var p = position(ev), col;
-  textarea.hide();
-  cel = col = getCel(p.x, p.y);
-  if (cel) {
-    shape.render(cel);
-    canva.mousemove(mousemove);
-    function mousemove(ev) {
-      var p = position(ev);
-      if ((col.x + col.width) < p.x || (col.y + col.height) < p.y) {
-        col = getCel(p.x, p.y);
-        if (col) {
-          shape.area(cel, col);
-        }
+function selectArea() {
+  var col;
+  canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
+  function mousedown(ev) {
+    console.log(context.measureText("foo"));
+    var p = position(ev);
+    textarea.hide();
+    cel = col = getCel(p.x, p.y);
+    if (cel) {
+      shape.render(cel);
+      canva.mousemove(mousemove);
+    }
+  }
+
+  function mousemove(ev) {
+    var p = position(ev);
+    if ((col.x + col.width) < p.x || (col.y + col.height) < p.y) {
+      col = getCel(p.x, p.y);
+      if (col) {
+        shape.area(cel, col);
       }
     }
   }
+
+  function mouseup(ev) {
+    canva.off("mousemove", mousemove);
+    textarea.off("change");
+  }
 }
 
-function mouseup(ev) {
-  canva.off("mousemove");
-  textarea.off("change");
-}
 
 function edit(ev) {
   var p = position(ev);

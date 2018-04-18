@@ -4,6 +4,7 @@ import { textCanvas, textEdit } from "./WorkText";
 import { getCel, position } from "./WorkLang";
 import { shape } from "./WorkShape";
 import { scrollX, scrollY } from "./WorkScroll";
+import { resizex } from "./WorkResize";
 
 let canva = $("canvas");
 let textarea = $("textarea");
@@ -11,35 +12,42 @@ let textarea = $("textarea");
 export var cel = {};
 
 export function action() {
-  canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
+  selectArea();
   scrollX();
   scrollY();
+  resizex();
 }
 
-function mousedown(ev) {
-  console.log(context.measureText("foo"));
-  var p = position(ev), col;
-  textarea.hide();
-  cel = col = getCel(p.x, p.y);
-  if (cel) {
-    shape.render(cel);
-    canva.mousemove(mousemove);
-    function mousemove(ev) {
-      var p = position(ev);
-      if ((col.x + col.width) < p.x || (col.y + col.height) < p.y) {
-        col = getCel(p.x, p.y);
-        if (col) {
-          shape.area(cel, col);
-        }
+function selectArea() {
+  var col;
+  canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
+  function mousedown(ev) {
+    console.log(context.measureText("foo"));
+    var p = position(ev);
+    textarea.hide();
+    cel = col = getCel(p.x, p.y);
+    if (cel) {
+      shape.render(cel);
+      canva.mousemove(mousemove);
+    }
+  }
+
+  function mousemove(ev) {
+    var p = position(ev);
+    if ((col.x + col.width) < p.x || (col.y + col.height) < p.y) {
+      col = getCel(p.x, p.y);
+      if (col) {
+        shape.area(cel, col);
       }
     }
   }
+
+  function mouseup(ev) {
+    canva.off("mousemove", mousemove);
+    textarea.off("change");
+  }
 }
 
-function mouseup(ev) {
-  canva.off("mousemove");
-  textarea.off("change");
-}
 
 function edit(ev) {
   var p = position(ev);
@@ -65,4 +73,3 @@ function textChange(cel) {
     shape.render();
   });
 }
-
