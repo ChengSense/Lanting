@@ -1,7 +1,5 @@
 import { width, height, canvas } from "./WorkInit";
-import { textCanvas } from "./WorkText";
 import { setting } from "./WorkLang";
-import { api } from "./WorkApi";
 
 export var headerCanvas = document.createElement("canvas");
 export var headerContext = headerCanvas.getContext("2d");

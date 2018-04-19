@@ -1,6 +1,5 @@
 import { width, height, canvas } from "./WorkInit";
 import { setting } from "./WorkLang";
-import { api } from "./WorkApi";
 
 export var numberCanvas = document.createElement("canvas");
 export var numberContext = numberCanvas.getContext("2d");

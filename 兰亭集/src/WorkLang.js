@@ -1,6 +1,6 @@
 import { map } from "./WorkApi";
 
-export function getCel(x, y) {
+export function cell(x, y) {
   var cel, l = y;
   while (l--) {
     var i = x;
@@ -10,6 +10,14 @@ export function getCel(x, y) {
         return cel;
       }
     }
+  }
+}
+
+export function index(cel) {
+  var index = cel.id.split(":");
+  return {
+    x:index[1],
+    y:index[0],
   }
 }
 

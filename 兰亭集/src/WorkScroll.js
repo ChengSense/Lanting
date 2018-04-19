@@ -1,5 +1,5 @@
 
-import { getCel } from "./WorkLang";
+import { cell } from "./WorkLang";
 import { shape } from "./WorkShape";
 
 export var scel = { x: 0.5, y: 0.5 };
@@ -9,17 +9,17 @@ export function scrollX() {
   var doc = $(document);
   var startx, starty, col;
 
-  controller.mousedown(scrollStar);
+  controller.mousedown(mousedown);
 
-  function scrollStar(ev) {
+  function mousedown(ev) {
     startx = ev.offsetX;
     starty = ev.pageY;
-    col = getCel(ev.pageX, ev.pageY);
+    col = cell(ev.pageX, ev.pageY);
     if (col)
-      doc.mousemove(scrolling).mouseup(scrollStop);
+      doc.mousemove(mousemove).mouseup(mouseup);
   }
 
-  function scrolling(ev) {
+  function mousemove(ev) {
     var offset = parseInt(ev.pageX - startx);
     if (offset < 0) offset = 0;
     controller.offset({ left: offset });
@@ -27,7 +27,7 @@ export function scrollX() {
   }
 
   function display(offset) {
-    var cel = getCel(offset, starty);
+    var cel = cell(offset, starty);
     if (cel) {
       col = cel;
       scel.x = cel.x;
@@ -35,8 +35,8 @@ export function scrollX() {
     }
   }
 
-  function scrollStop() {
-    doc.off("mousemove", scrolling).off("mouseup", scrollStop);
+  function mouseup() {
+    doc.off("mousemove", mousemove).off("mouseup", mouseup);
   }
 }
 
@@ -45,17 +45,17 @@ export function scrollY() {
   var doc = $(document);
   var startx, starty, col;
 
-  controller.mousedown(scrollStar);
+  controller.mousedown(mousedown);
 
-  function scrollStar(ev) {
+  function mousedown(ev) {
     startx = ev.pageX;
     starty = ev.offsetY;
-    col = getCel(ev.pageX, ev.pageY);
+    col = cell(ev.pageX, ev.pageY);
     if (col)
-      doc.mousemove(scrolling).mouseup(scrollStop);
+      doc.mousemove(mousemove).mouseup(mouseup);
   }
 
-  function scrolling(ev) {
+  function mousemove(ev) {
     var offset = ev.pageY - starty;
     if (offset < 0) offset = 0;
     controller.offset({ top: offset });
@@ -63,7 +63,7 @@ export function scrollY() {
   }
 
   function display(offset) {
-    var cel = getCel(startx, offset);
+    var cel = cell(startx, offset);
     if (cel) {
       col = cel;
       scel.y = cel.y;
@@ -71,8 +71,8 @@ export function scrollY() {
     }
   }
 
-  function scrollStop() {
-    doc.off("mousemove", scrolling).off("mouseup", scrollStop);
+  function mouseup() {
+    doc.off("mousemove", mousemove).off("mouseup", mouseup);
   }
 }
 

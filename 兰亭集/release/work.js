@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  function getCel(x, y) {
+  function cell(x, y) {
     var cel,
         l = y;
     while (l--) {
@@ -13,6 +13,14 @@
         }
       }
     }
+  }
+
+  function index(cel) {
+    var index = cel.id.split(":");
+    return {
+      x: index[1],
+      y: index[0]
+    };
   }
 
   function position(ev) {
@@ -31,79 +39,6 @@
     for (var key in src) {
       object[key] = src[key];
     }return object;
-  }
-
-  var textCanvas = document.createElement("canvas");
-  var textContext = textCanvas.getContext("2d");
-
-  function text(data$$1) {
-    if (window.devicePixelRatio) {
-      textCanvas.style.width = width + "px";
-      textCanvas.style.height = height + "px";
-      textCanvas.width = canvas.width;
-      textCanvas.height = canvas.height;
-      textContext.scale(window.devicePixelRatio, window.devicePixelRatio);
-    }
-    textLayer(data$$1);
-  }
-
-  function textLayer(data$$1) {
-    setting(textContext, {
-      font: "14px Arial"
-    });
-    drawText(data$$1);
-  }
-
-  function drawText(rows) {
-    rows.forEach(function (cels) {
-      cels.forEach(function (cel) {
-        textContext.fillText(cel.text, cel.x + 3, cel.y + 15);
-      });
-    });
-  }
-
-  function textEdit(cel) {
-    textContext.clearRect(cel.x, cel.y, cel.width, cel.height);
-    textContext.fillText(cel.text, cel.x + 3, cel.y + 15);
-  }
-
-  var headerCanvas = document.createElement("canvas");
-  var headerContext = headerCanvas.getContext("2d");
-
-  function gridHeader(rows, cels) {
-    if (window.devicePixelRatio) {
-      headerCanvas.style.width = width + "px";
-      headerCanvas.style.height = height + "px";
-      headerCanvas.width = canvas.width;
-      headerCanvas.height = canvas.height;
-      headerContext.scale(window.devicePixelRatio, window.devicePixelRatio);
-    }
-    headerLayer(rows, cels);
-  }
-
-  function headerLayer(rows, cels) {
-    setting(headerContext, {
-      strokeStyle: "#d0d3d7",
-      lineCap: "butt"
-    });
-    drawHeader(rows, cels);
-  }
-
-  function drawHeader(rows, cels) {
-    var l = -1;
-    headerContext.beginPath();
-    while (++l < cels.length) {
-      var col = cels[l];
-      headerContext.moveTo(col.x, col.y);
-      headerContext.lineTo(col.x, col.height + 0.5);
-      if (0 < l) {
-        headerContext.fillStyle = "#f7f7f7";
-        headerContext.fillRect(col.x, 0, col.width, col.height);
-        headerContext.fillStyle = "black";
-        headerContext.fillText(col.text, col.x + 3, col.y + 15);
-      }
-    }
-    headerContext.stroke();
   }
 
   var numberCanvas = document.createElement("canvas");
@@ -186,12 +121,11 @@
       return rows;
     },
     redatax: function redatax(rows, col, offset) {
-      var l = col.id.split(":")[1] - 1;
+      var l = index(col).x - 1;
       rows.forEach(function (cels) {
         var cel = cels[l];
         cel.width = cel.width + offset;
       });
-      console.log(rows);
       return rows;
     },
     title: function title() {
@@ -242,6 +176,79 @@
     }
     map[parseInt(col.x) + "&" + parseInt(col.y)] = col;
     return col;
+  }
+
+  var textCanvas = document.createElement("canvas");
+  var textContext = textCanvas.getContext("2d");
+
+  function text(data$$1) {
+    if (window.devicePixelRatio) {
+      textCanvas.style.width = width + "px";
+      textCanvas.style.height = height + "px";
+      textCanvas.width = canvas.width;
+      textCanvas.height = canvas.height;
+      textContext.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    textLayer(data$$1);
+  }
+
+  function textLayer(data$$1) {
+    setting(textContext, {
+      font: "14px Arial"
+    });
+    drawText(data$$1);
+  }
+
+  function drawText(rows) {
+    rows.forEach(function (cels) {
+      cels.forEach(function (cel) {
+        textContext.fillText(cel.text, cel.x + 3, cel.y + 15);
+      });
+    });
+  }
+
+  function textEdit(cel) {
+    textContext.clearRect(cel.x, cel.y, cel.width, cel.height);
+    textContext.fillText(cel.text, cel.x + 3, cel.y + 15);
+  }
+
+  var headerCanvas = document.createElement("canvas");
+  var headerContext = headerCanvas.getContext("2d");
+
+  function gridHeader(rows, cels) {
+    if (window.devicePixelRatio) {
+      headerCanvas.style.width = width + "px";
+      headerCanvas.style.height = height + "px";
+      headerCanvas.width = canvas.width;
+      headerCanvas.height = canvas.height;
+      headerContext.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    headerLayer(rows, cels);
+  }
+
+  function headerLayer(rows, cels) {
+    setting(headerContext, {
+      strokeStyle: "#d0d3d7",
+      lineCap: "butt"
+    });
+    drawHeader(rows, cels);
+  }
+
+  function drawHeader(rows, cels) {
+    var l = -1;
+    headerContext.beginPath();
+    while (++l < cels.length) {
+      var col = cels[l];
+      headerContext.moveTo(col.x, col.y);
+      headerContext.lineTo(col.x, col.height + 0.5);
+      if (0 < l) {
+        headerContext.fillStyle = "#f7f7f7";
+        headerContext.fillRect(col.x, 0, col.width, col.height);
+        headerContext.fillStyle = "black";
+        headerContext.fillText(col.text, col.x + 3, col.y + 15);
+      }
+    }
+    headerContext.stroke();
   }
 
   var gridCanvas = document.createElement("canvas");
@@ -311,7 +318,7 @@
       context.lineWidth = 2;
       context.stroke();
     },
-    render: function render(cel) {
+    render: function render$$1(cel) {
       context.beginPath();
       context.clearRect(0, 0, width, height);
       context.drawImage(gridCanvas, 0, 0, width, height);
@@ -354,16 +361,16 @@
     var doc = $(document);
     var startx, starty, col;
 
-    controller.mousedown(scrollStar);
+    controller.mousedown(mousedown);
 
-    function scrollStar(ev) {
+    function mousedown(ev) {
       startx = ev.offsetX;
       starty = ev.pageY;
-      col = getCel(ev.pageX, ev.pageY);
-      if (col) doc.mousemove(scrolling).mouseup(scrollStop);
+      col = cell(ev.pageX, ev.pageY);
+      if (col) doc.mousemove(mousemove).mouseup(mouseup);
     }
 
-    function scrolling(ev) {
+    function mousemove(ev) {
       var offset = parseInt(ev.pageX - startx);
       if (offset < 0) offset = 0;
       controller.offset({ left: offset });
@@ -371,7 +378,7 @@
     }
 
     function display(offset) {
-      var cel = getCel(offset, starty);
+      var cel = cell(offset, starty);
       if (cel) {
         col = cel;
         scel.x = cel.x;
@@ -379,8 +386,8 @@
       }
     }
 
-    function scrollStop() {
-      doc.off("mousemove", scrolling).off("mouseup", scrollStop);
+    function mouseup() {
+      doc.off("mousemove", mousemove).off("mouseup", mouseup);
     }
   }
 
@@ -389,16 +396,16 @@
     var doc = $(document);
     var startx, starty, col;
 
-    controller.mousedown(scrollStar);
+    controller.mousedown(mousedown);
 
-    function scrollStar(ev) {
+    function mousedown(ev) {
       startx = ev.pageX;
       starty = ev.offsetY;
-      col = getCel(ev.pageX, ev.pageY);
-      if (col) doc.mousemove(scrolling).mouseup(scrollStop);
+      col = cell(ev.pageX, ev.pageY);
+      if (col) doc.mousemove(mousemove).mouseup(mouseup);
     }
 
-    function scrolling(ev) {
+    function mousemove(ev) {
       var offset = ev.pageY - starty;
       if (offset < 0) offset = 0;
       controller.offset({ top: offset });
@@ -406,7 +413,7 @@
     }
 
     function display(offset) {
-      var cel = getCel(startx, offset);
+      var cel = cell(startx, offset);
       if (cel) {
         col = cel;
         scel.y = cel.y;
@@ -414,8 +421,8 @@
       }
     }
 
-    function scrollStop() {
-      doc.off("mousemove", scrolling).off("mouseup", scrollStop);
+    function mouseup() {
+      doc.off("mousemove", mousemove).off("mouseup", mouseup);
     }
   }
 
@@ -424,40 +431,36 @@
     var doc = $(document);
     var startx, start;
 
-    canva.mousemove(resizeing);
+    function mousedown(ev) {
+      start = cell(ev.pageX, ev.pageY);
+      startx = start.x;
+    }
 
-    function resizeing(ev) {
-      var cel = getCel(ev.pageX, ev.pageY);
-      if (cel) {
-        if (Math.abs(cel.x - ev.pageX) < 8) {
-          canva.css({ cursor: "col-resize" });
-          if (!start) {
-            canva.mousedown(mousedown);
-            doc.mouseup(mouseup);
-            start = cel;
-          }
-        } else {
-          canva.css({ cursor: "default" });
-          canva.off("mousedown", mousedown);
-          doc.off("mouseup", mouseup);
-        }
-      }
-      function mousedown(ev) {
-        start = getCel(ev.pageX, ev.pageY);
-        startx = start.x;
+    function mousemove(ev) {
+      var cel = cell(ev.pageX, ev.pageY);
+      if (cel && Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
+        canva.css({ cursor: "col-resize" });
+        if (start) return;
+        canva.mousedown(mousedown);
+        doc.mouseup(mouseup);
+        start = cel;
+      } else {
+        canva.css({ cursor: "default" });
+        canva.off("mousedown", mousedown);
+        doc.off("mouseup", mouseup);
       }
       function mouseup(ev) {
         var offset = parseInt(ev.pageX - startx);
         api.redatax(data, start, offset);
         api.redata(data);
-        text(data);
-        grid(data, data[0]);
-        shape.render();
+        render();
         start = null;
         canva.off("mousedown", mousedown);
         doc.off("mouseup", mouseup);
       }
     }
+
+    canva.mousemove(mousemove);
   }
 
   var canva = $("canvas");
@@ -478,17 +481,17 @@
     function mousedown(ev) {
       var p = position(ev);
       textarea.hide();
-      cel = col = getCel(p.x, p.y);
-      if (cel) {
+      cel = col = cell(p.x, p.y);
+      if (cel && (index(col).x < 0 || index(col).y < 0)) {
         shape.render(cel);
-        canva.mousemove(mousemove);
       }
+      canva.mousemove(mousemove);
     }
 
     function mousemove(ev) {
       var p = position(ev);
       if (col.x + col.width < p.x || col.y + col.height < p.y) {
-        col = getCel(p.x, p.y);
+        col = cell(p.x, p.y);
         if (col) {
           shape.area(cel, col);
         }
@@ -503,7 +506,7 @@
 
   function edit(ev) {
     var p = position(ev);
-    var cel = getCel(p.x, p.y);
+    var cel = cell(p.x, p.y);
     if (cel) {
       setTextArea(cel);
       textChange(cel);
@@ -544,13 +547,16 @@
       canvas.width = width * window.devicePixelRatio;
       canvas.height = height * window.devicePixelRatio;
       context.scale(window.devicePixelRatio, window.devicePixelRatio);
-
       data = api.data();
-      text(data);
-      grid(data, data[0]);
-      shape.render();
+      render(data);
       action();
     }
+  }
+
+  function render() {
+    text(data);
+    grid(data, data[0]);
+    shape.render();
   }
 
   init();

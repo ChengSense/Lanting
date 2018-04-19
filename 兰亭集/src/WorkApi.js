@@ -1,6 +1,7 @@
-import { header } from "./WorkGridHeader";
 import { number as num } from "./WorkGridNumber";
 import { alphabet as alph } from "./WorkInit";
+import { index } from "./WorkLang";
+
 export var map = {};
 export let api = {
   data: function (row, cel) {
@@ -32,12 +33,11 @@ export let api = {
     return rows;
   },
   redatax: function (rows, col, offset) {
-    var i = -1, l = col.id.split(":")[1] - 1;
+    var i = -1, l = index(col).x - 1;
     rows.forEach(cels => {
       var cel = cels[l];
       cel.width = cel.width + offset;
     });
-    console.log(rows)
     return rows;
   },
   title: function () {

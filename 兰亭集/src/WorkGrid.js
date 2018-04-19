@@ -2,7 +2,6 @@ import { width, height, canvas } from "./WorkInit";
 import { setting } from "./WorkLang";
 import { gridHeader } from "./WorkGridHeader";
 import { gridNumber } from "./WorkGridNumber";
-import { api } from "./WorkApi";
 
 export var gridCanvas = document.createElement("canvas");
 export var gridContext = gridCanvas.getContext("2d");

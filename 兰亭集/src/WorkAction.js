@@ -1,10 +1,9 @@
-import { width, height, context, canvas, data } from "./WorkInit";
-import { gridCanvas } from "./WorkGrid";
-import { textCanvas, textEdit } from "./WorkText";
-import { getCel, position } from "./WorkLang";
-import { shape } from "./WorkShape";
+import { width, height } from "./WorkInit";
+import { cell, position, index } from "./WorkLang";
+import { textEdit } from "./WorkText";
 import { scrollX, scrollY } from "./WorkScroll";
 import { resizex } from "./WorkResize";
+import { shape } from "./WorkShape";
 
 let canva = $("canvas");
 let textarea = $("textarea");
@@ -24,17 +23,17 @@ function selectArea() {
   function mousedown(ev) {
     var p = position(ev);
     textarea.hide();
-    cel = col = getCel(p.x, p.y);
-    if (cel) {
+    cel = col = cell(p.x, p.y);
+    if (cel && (index(col).x < 0 || index(col).y < 0)) {
       shape.render(cel);
-      canva.mousemove(mousemove);
     }
+    canva.mousemove(mousemove);
   }
 
   function mousemove(ev) {
     var p = position(ev);
     if ((col.x + col.width) < p.x || (col.y + col.height) < p.y) {
-      col = getCel(p.x, p.y);
+      col = cell(p.x, p.y);
       if (col) {
         shape.area(cel, col);
       }
@@ -50,7 +49,7 @@ function selectArea() {
 
 function edit(ev) {
   var p = position(ev);
-  var cel = getCel(p.x, p.y);
+  var cel = cell(p.x, p.y);
   if (cel) {
     setTextArea(cel);
     textChange(cel);
