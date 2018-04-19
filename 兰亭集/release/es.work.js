@@ -160,6 +160,26 @@ let api = {
     }
     return rows;
   },
+  redata: function (rows) {
+    var y = 0.5;
+    rows.forEach(cels => {
+      var x = 0.5, col;
+      cels.forEach(cel => {
+        col = cel;
+        cel.x = x, cel.y = y, x = x + cel.width;
+      });
+      y = y + col.height;
+    });
+    return rows;
+  },
+  redatax: function (rows, col, offset) {
+    var l = col.id.match(/\d+/)[0];
+    rows.forEach(cels => {
+      var cel = cels[l];
+      cel.width = cel.width + offset;
+    });
+    return rows;
+  },
   title: function () {
     var list = [""].concat(alphabet);
     alphabet.forEach(A => {
@@ -388,7 +408,7 @@ function scrollY() {
 
 function resizex() {
   let canva = $("canvas");
-  var startx, col;
+  var startx, col, start;
 
   canva.mousemove(resizeing);
 
@@ -408,9 +428,15 @@ function resizex() {
   }
   function mousedown() {
     startx = col.x;
+    start = col;
   }
-  function mouseup() {
-
+  function mouseup(ev) {
+    var offset = ev.pageX - startx;
+    api.redatax(data, start, offset);
+    api.redata(data);
+    text(data);
+    grid(data, data[0]);
+    shape.render();
   }
 }
 
@@ -430,7 +456,6 @@ function selectArea() {
   var col;
   canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
   function mousedown(ev) {
-    console.log(context.measureText("foo"));
     var p = position(ev);
     textarea.hide();
     cel = col = getCel(p.x, p.y);

@@ -169,6 +169,27 @@
       }
       return rows;
     },
+    redata: function redata(rows) {
+      var y = 0.5;
+      rows.forEach(function (cels) {
+        var x = 0.5,
+            col;
+        cels.forEach(function (cel) {
+          col = cel;
+          cel.x = x, cel.y = y, x = x + cel.width;
+        });
+        y = y + col.height;
+      });
+      return rows;
+    },
+    redatax: function redatax(rows, col, offset) {
+      var l = col.id.match(/\d+/)[0];
+      rows.forEach(function (cels) {
+        var cel = cels[l];
+        cel.width = cel.width + offset;
+      });
+      return rows;
+    },
     title: function title() {
       var list = [""].concat(alphabet);
       alphabet.forEach(function (A) {
@@ -396,7 +417,7 @@
 
   function resizex() {
     var canva = $("canvas");
-    var startx, col;
+    var startx, col, start;
 
     canva.mousemove(resizeing);
 
@@ -416,8 +437,16 @@
     }
     function mousedown() {
       startx = col.x;
+      start = col;
     }
-    function mouseup() {}
+    function mouseup(ev) {
+      var offset = ev.pageX - startx;
+      api.redatax(data, start, offset);
+      api.redata(data);
+      text(data);
+      grid(data, data[0]);
+      shape.render();
+    }
   }
 
   var canva = $("canvas");
@@ -436,7 +465,6 @@
     var col;
     canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
     function mousedown(ev) {
-      console.log(context.measureText("foo"));
       var p = position(ev);
       textarea.hide();
       cel = col = getCel(p.x, p.y);

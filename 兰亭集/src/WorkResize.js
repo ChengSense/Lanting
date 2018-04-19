@@ -1,12 +1,16 @@
 
 import { getCel } from "./WorkLang";
 import { shape } from "./WorkShape";
+import { data } from "./WorkInit";
+import { api } from "./WorkApi";
+import { grid } from "./WorkGrid";
+import { text } from "./WorkText";
 
 export var scel = { x: 0.5, y: 0.5 };
 
 export function resizex() {
   let canva = $("canvas");
-  var startx, starty, col;
+  var startx, starty, col, start;
 
   canva.mousemove(resizeing);
 
@@ -26,9 +30,15 @@ export function resizex() {
   }
   function mousedown() {
     startx = col.x;
+    start = col;
   }
-  function mouseup() {
-
+  function mouseup(ev) {
+    var offset = ev.pageX - startx;
+    api.redatax(data, start, offset);
+    api.redata(data);
+    text(data);
+    grid(data, data[0]);
+    shape.render()
   }
 }
 

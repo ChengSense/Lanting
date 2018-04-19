@@ -22,7 +22,6 @@ function selectArea() {
   var col;
   canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
   function mousedown(ev) {
-    console.log(context.measureText("foo"));
     var p = position(ev);
     textarea.hide();
     cel = col = getCel(p.x, p.y);

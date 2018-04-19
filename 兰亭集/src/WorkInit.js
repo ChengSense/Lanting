@@ -1,7 +1,7 @@
 
 import { api } from "./WorkApi";
 import { action } from "./WorkAction";
-import { grid, gridCanvas } from "./WorkGrid";
+import { grid } from "./WorkGrid";
 import { text, textCanvas } from "./WorkText";
 import { shape } from "./WorkShape";
 

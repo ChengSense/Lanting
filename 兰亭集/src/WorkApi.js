@@ -17,6 +17,27 @@ export let api = {
     }
     return rows;
   },
+  redata: function (rows) {
+    var y = 0.5;
+    rows.forEach(cels => {
+      var x = 0.5, col;
+      cels.forEach(cel => {
+        col = cel;
+        cel.x = x, cel.y = y,
+          x = x + cel.width;
+      });
+      y = y + col.height;
+    });
+    return rows;
+  },
+  redatax: function (rows, col, offset) {
+    var i = -1, l = col.id.match(/\d+/)[0];
+    rows.forEach(cels => {
+      var cel = cels[l];
+      cel.width = cel.width + offset;
+    });
+    return rows;
+  },
   title: function () {
     var list = [""].concat(alph);
     alph.forEach(A => {
