@@ -354,7 +354,7 @@ function scrollX() {
   }
 
   function scrolling(ev) {
-    var offset = ev.pageX - startx;
+    var offset = parseInt(ev.pageX - startx);
     if (offset < 0) offset = 0;
     controller.offset({ left: offset });
     display(offset);
@@ -428,11 +428,9 @@ function resizex() {
           start = cel;
         }
       } else {
-        if (start) {
-          canva.css({ cursor: "default" });
-          canva.off("mousedown", mousedown);
-          doc.off("mouseup", mouseup);
-        }
+        canva.css({ cursor: "default" });
+        canva.off("mousedown", mousedown);
+        doc.off("mouseup", mouseup);
       }
     }
     function mousedown(ev) {

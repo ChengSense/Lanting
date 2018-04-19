@@ -20,7 +20,7 @@ export function scrollX() {
   }
 
   function scrolling(ev) {
-    var offset = ev.pageX - startx;
+    var offset = parseInt(ev.pageX - startx);
     if (offset < 0) offset = 0;
     controller.offset({ left: offset });
     display(offset);
