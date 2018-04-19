@@ -150,6 +150,7 @@
     numberContext.stroke();
   }
 
+  var map = {};
   var api = {
     data: function data$$1(row, cel) {
       row = row || 50, cel = cel || 50;
@@ -170,24 +171,27 @@
       return rows;
     },
     redata: function redata(rows) {
+      map = {};
       var y = 0.5;
       rows.forEach(function (cels) {
         var x = 0.5,
             col;
         cels.forEach(function (cel) {
-          col = cel;
-          cel.x = x, cel.y = y, x = x + cel.width;
+          col = cel, cel.x = x, cel.y = y;
+          map[parseInt(cel.x) + "&" + parseInt(cel.y)] = cel;
+          x = x + cel.width;
         });
         y = y + col.height;
       });
       return rows;
     },
     redatax: function redatax(rows, col, offset) {
-      var l = col.id.match(/\d+/)[0];
+      var l = col.id.split(":")[1] - 1;
       rows.forEach(function (cels) {
         var cel = cels[l];
         cel.width = cel.width + offset;
       });
+      console.log(rows);
       return rows;
     },
     title: function title() {
@@ -205,7 +209,7 @@
     var col;
     if (0 < i && l == 0) {
       col = {
-        id: "" + i + titles[l],
+        id: i + ":" + l,
         x: x, y: y,
         width: width$$1,
         height: height$$1,
@@ -213,7 +217,7 @@
       };
     } else if (0 < l && i == 0) {
       col = {
-        id: "" + i + titles[l],
+        id: i + ":" + l,
         x: x, y: y,
         width: width$$1,
         height: height$$1,
@@ -221,7 +225,7 @@
       };
     } else if (0 == i && 0 == l) {
       col = {
-        id: "" + i + titles[l],
+        id: i + ":" + l,
         x: x, y: y,
         width: width$$1,
         height: height$$1,
@@ -229,11 +233,11 @@
       };
     } else {
       col = {
-        id: "" + i + titles[l],
+        id: i + ":" + l,
         x: x, y: y,
         width: width$$1,
         height: height$$1,
-        text: "" + i + titles[l]
+        text: i + ":" + l
       };
     }
     map[parseInt(col.x) + "&" + parseInt(col.y)] = col;
@@ -417,35 +421,45 @@
 
   function resizex() {
     var canva = $("canvas");
-    var startx, col, start;
+    var doc = $(document);
+    var startx, start;
 
     canva.mousemove(resizeing);
 
     function resizeing(ev) {
       var cel = getCel(ev.pageX, ev.pageY);
       if (cel) {
-        if (col) {
-          if (Math.abs(col.x - ev.pageX) < 8) {
-            canva.css({ cursor: "col-resize" });
-            canva.mousedown(mousedown).mouseup(mouseup);
-          } else {
+        if (Math.abs(cel.x - ev.pageX) < 8) {
+          canva.css({ cursor: "col-resize" });
+          if (!start) {
+            canva.mousedown(mousedown);
+            doc.mouseup(mouseup);
+            start = cel;
+          }
+        } else {
+          if (start) {
             canva.css({ cursor: "default" });
+            canva.off("mousedown", mousedown);
+            doc.off("mouseup", mouseup);
           }
         }
-        col = cel;
       }
-    }
-    function mousedown() {
-      startx = col.x;
-      start = col;
-    }
-    function mouseup(ev) {
-      var offset = ev.pageX - startx;
-      api.redatax(data, start, offset);
-      api.redata(data);
-      text(data);
-      grid(data, data[0]);
-      shape.render();
+      function mousedown(ev) {
+        var cel = getCel(ev.pageX, ev.pageY);
+        startx = cel.x;
+        start = cel;
+      }
+      function mouseup(ev) {
+        var offset = parseInt(ev.pageX - startx);
+        api.redatax(data, start, offset);
+        api.redata(data);
+        text(data);
+        grid(data, data[0]);
+        shape.render();
+        start = null;
+        canva.off("mousedown", mousedown);
+        doc.off("mouseup", mouseup);
+      }
     }
   }
 
@@ -517,7 +531,7 @@
 
   var width;
   var height;
-  var map = {};
+
   var data;
   var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 

@@ -1,4 +1,4 @@
-import { width, height, map, context, canvas, data } from "./WorkInit";
+import { width, height, context, canvas, data } from "./WorkInit";
 import { gridCanvas } from "./WorkGrid";
 import { textCanvas, textEdit } from "./WorkText";
 import { getCel, position } from "./WorkLang";

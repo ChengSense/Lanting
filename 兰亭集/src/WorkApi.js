@@ -1,7 +1,7 @@
 import { header } from "./WorkGridHeader";
 import { number as num } from "./WorkGridNumber";
-import { map, alphabet as alph } from "./WorkInit";
-
+import { alphabet as alph } from "./WorkInit";
+export var map = {};
 export let api = {
   data: function (row, cel) {
     row = row || 50, cel = cel || 50
@@ -18,24 +18,26 @@ export let api = {
     return rows;
   },
   redata: function (rows) {
+    map = {};
     var y = 0.5;
     rows.forEach(cels => {
       var x = 0.5, col;
       cels.forEach(cel => {
-        col = cel;
-        cel.x = x, cel.y = y,
-          x = x + cel.width;
+        col = cel, cel.x = x, cel.y = y;
+        map[`${parseInt(cel.x)}&${parseInt(cel.y)}`] = cel;
+        x = x + cel.width;
       });
       y = y + col.height;
     });
     return rows;
   },
   redatax: function (rows, col, offset) {
-    var i = -1, l = col.id.match(/\d+/)[0];
+    var i = -1, l = col.id.split(":")[1] - 1;
     rows.forEach(cels => {
       var cel = cels[l];
       cel.width = cel.width + offset;
     });
+    console.log(rows)
     return rows;
   },
   title: function () {
@@ -53,7 +55,7 @@ function setCel(i, l, x, y, width, height) {
   var col;
   if (0 < i && l == 0) {
     col = {
-      id: `${i}${titles[l]}`,
+      id: `${i}:${l}`,
       x: x, y: y,
       width: width,
       height: height,
@@ -61,7 +63,7 @@ function setCel(i, l, x, y, width, height) {
     }
   } else if (0 < l && i == 0) {
     col = {
-      id: `${i}${titles[l]}`,
+      id: `${i}:${l}`,
       x: x, y: y,
       width: width,
       height: height,
@@ -69,7 +71,7 @@ function setCel(i, l, x, y, width, height) {
     }
   } else if (0 == i && 0 == l) {
     col = {
-      id: `${i}${titles[l]}`,
+      id: `${i}:${l}`,
       x: x, y: y,
       width: width,
       height: height,
@@ -77,11 +79,11 @@ function setCel(i, l, x, y, width, height) {
     }
   } else {
     col = {
-      id: `${i}${titles[l]}`,
+      id: `${i}:${l}`,
       x: x, y: y,
       width: width,
       height: height,
-      text: `${i}${titles[l]}`
+      text: `${i}:${l}`
     }
   }
   map[`${parseInt(col.x)}&${parseInt(col.y)}`] = col;

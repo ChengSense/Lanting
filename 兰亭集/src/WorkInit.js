@@ -8,7 +8,7 @@ import { shape } from "./WorkShape";
 
 export var width;
 export var height;
-export var map = {};
+
 export var data;
 export var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 

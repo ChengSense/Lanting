@@ -10,38 +10,47 @@ export var scel = { x: 0.5, y: 0.5 };
 
 export function resizex() {
   let canva = $("canvas");
-  var startx, starty, col, start;
+  var doc = $(document);
+  var startx, starty, start;
 
   canva.mousemove(resizeing);
 
   function resizeing(ev) {
     var cel = getCel(ev.pageX, ev.pageY);
     if (cel) {
-      if (col) {
-        if (Math.abs(col.x - ev.pageX) < 8) {
-          canva.css({ cursor: "col-resize" });
-          canva.mousedown(mousedown).mouseup(mouseup);
-        } else {
+      if (Math.abs(cel.x - ev.pageX) < 8) {
+        canva.css({ cursor: "col-resize" });
+        if (!start) {
+          canva.mousedown(mousedown);
+          doc.mouseup(mouseup);
+          start = cel;
+        }
+      } else {
+        if (start) {
           canva.css({ cursor: "default" });
+          canva.off("mousedown", mousedown);
+          doc.off("mouseup", mouseup);
         }
       }
-      col = cel;
+    }
+    function mousedown(ev) {
+      var cel = getCel(ev.pageX, ev.pageY);
+      startx = cel.x;
+      start = cel;
+    }
+    function mouseup(ev) {
+      var offset = parseInt(ev.pageX - startx);
+      api.redatax(data, start, offset);
+      api.redata(data);
+      text(data);
+      grid(data, data[0]);
+      shape.render();
+      start = null;
+      canva.off("mousedown", mousedown);
+      doc.off("mouseup", mouseup);
     }
   }
-  function mousedown() {
-    startx = col.x;
-    start = col;
-  }
-  function mouseup(ev) {
-    var offset = ev.pageX - startx;
-    api.redatax(data, start, offset);
-    api.redata(data);
-    text(data);
-    grid(data, data[0]);
-    shape.render()
-  }
 }
-
 export function resizeY() {
   let canva = $("canvas");
   var startx, starty, col;

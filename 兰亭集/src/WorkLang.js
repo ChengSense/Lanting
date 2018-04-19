@@ -1,4 +1,4 @@
-import { map } from "./WorkInit";
+import { map } from "./WorkApi";
 
 export function getCel(x, y) {
   var cel, l = y;
