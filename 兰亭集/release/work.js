@@ -434,21 +434,25 @@
     function mousedown(ev) {
       start = cell(ev.pageX, ev.pageY);
       startx = start.x;
+      canva.off("mousedown", mousedown);
       doc.mouseup(mouseup);
     }
 
     function mousemove(ev) {
+      if (start) return;
       var cel = cell(ev.pageX, ev.pageY);
       if (cel) {
-        if (Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
+        if (Math.abs(cel.x - ev.pageX) < 16 && index(cel).y == 0) {
           canva.css({ cursor: "col-resize" });
           if (col) return;
           canva.mousedown(mousedown);
           col = cel;
         } else {
+          if (start) return;
           canva.css({ cursor: "default" });
           canva.off("mousedown", mousedown);
-          if (!start) col = null;      }
+          col = null;
+        }
       }
     }
 
@@ -459,7 +463,6 @@
       api.redata(data);
       render();
       start = null;
-      canva.off("mousedown", mousedown);
       doc.off("mouseup", mouseup);
     }
 
