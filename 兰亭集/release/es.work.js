@@ -436,9 +436,8 @@ function resizex() {
       }
     }
     function mousedown(ev) {
-      var cel = getCel(ev.pageX, ev.pageY);
-      startx = cel.x;
-      start = cel;
+      start = getCel(ev.pageX, ev.pageY);
+      startx = start.x;
     }
     function mouseup(ev) {
       var offset = parseInt(ev.pageX - startx);
