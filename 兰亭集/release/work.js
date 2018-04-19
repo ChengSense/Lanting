@@ -429,35 +429,38 @@
   function resizex() {
     var canva = $("canvas");
     var doc = $(document);
-    var startx, start;
+    var startx, col, start;
 
     function mousedown(ev) {
       start = cell(ev.pageX, ev.pageY);
       startx = start.x;
+      doc.mouseup(mouseup);
     }
 
     function mousemove(ev) {
       var cel = cell(ev.pageX, ev.pageY);
-      if (cel && Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
-        canva.css({ cursor: "col-resize" });
-        if (start) return;
-        canva.mousedown(mousedown);
-        doc.mouseup(mouseup);
-        start = cel;
-      } else {
-        canva.css({ cursor: "default" });
-        canva.off("mousedown", mousedown);
-        doc.off("mouseup", mouseup);
+      if (cel) {
+        if (Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
+          canva.css({ cursor: "col-resize" });
+          if (col) return;
+          canva.mousedown(mousedown);
+          col = cel;
+        } else {
+          canva.css({ cursor: "default" });
+          canva.off("mousedown", mousedown);
+          if (!start) col = null;      }
       }
-      function mouseup(ev) {
-        var offset = parseInt(ev.pageX - startx);
-        api.redatax(data, start, offset);
-        api.redata(data);
-        render();
-        start = null;
-        canva.off("mousedown", mousedown);
-        doc.off("mouseup", mouseup);
-      }
+    }
+
+    function mouseup(ev) {
+      if (!start) return;
+      var offset = parseInt(ev.pageX - startx);
+      api.redatax(data, start, offset);
+      api.redata(data);
+      render();
+      start = null;
+      canva.off("mousedown", mousedown);
+      doc.off("mouseup", mouseup);
     }
 
     canva.mousemove(mousemove);
@@ -541,12 +544,12 @@
   function init() {
     width = $(canvas).parent().width(), height = $(canvas).parent().height();
     if (window.devicePixelRatio) {
-
       canvas.style.width = width + "px";
       canvas.style.height = height + "px";
       canvas.width = width * window.devicePixelRatio;
       canvas.height = height * window.devicePixelRatio;
       context.scale(window.devicePixelRatio, window.devicePixelRatio);
+
       data = api.data();
       render(data);
       action();

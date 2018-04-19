@@ -17,12 +17,12 @@ export var context = canvas.getContext('2d');
 export function init() {
   width = $(canvas).parent().width(), height = $(canvas).parent().height();
   if (window.devicePixelRatio) {
-
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     canvas.width = width * window.devicePixelRatio;
     canvas.height = height * window.devicePixelRatio;
     context.scale(window.devicePixelRatio, window.devicePixelRatio);
+    
     data = api.data();
     render(data)
     action();
