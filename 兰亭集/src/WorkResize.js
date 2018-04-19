@@ -1,5 +1,5 @@
 
-import { cell, index } from "./WorkLang";
+import { cell, index, beforex } from "./WorkLang";
 import { data, render } from "./WorkInit";
 import { api } from "./WorkApi";
 
@@ -11,17 +11,29 @@ export function resizex() {
   var startx, starty, col, start;
 
   function mousedown(ev) {
-    start = cell(ev.pageX, ev.pageY);
-    startx = start.x;
-    canva.off("mousedown", mousedown);
     doc.mouseup(mouseup);
+    canva.off("mousedown", mousedown);
+
+    var cel = cell(ev.pageX, ev.pageY);
+    if (Math.abs(cel.x + cel.width - ev.pageX) < 8) {
+      start = cel;
+      startx = start.x + start.width;
+    } else if (Math.abs(cel.x - ev.pageX) < 8) {
+      start = beforex(cel);
+      startx = start.x + start.width;
+    }
   }
 
   function mousemove(ev) {
     if (start) return;
     var cel = cell(ev.pageX, ev.pageY);
     if (cel) {
-      if (Math.abs(cel.x - ev.pageX) < 16 && index(cel).y == 0) {
+      if (Math.abs(cel.x + cel.width - ev.pageX) < 8 && index(cel).y == 0) {
+        canva.css({ cursor: "col-resize" });
+        if (col) return;
+        canva.mousedown(mousedown);
+        col = cel;
+      } else if (Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
         canva.css({ cursor: "col-resize" });
         if (col) return;
         canva.mousedown(mousedown);

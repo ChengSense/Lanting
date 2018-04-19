@@ -1,4 +1,5 @@
 import { map } from "./WorkApi";
+import { data } from "./WorkInit";
 
 export function cell(x, y) {
   var cel, l = y;
@@ -16,9 +17,19 @@ export function cell(x, y) {
 export function index(cel) {
   var index = cel.id.split(":");
   return {
-    x:index[1],
-    y:index[0],
+    x: index[1],
+    y: index[0],
   }
+}
+
+export function beforex(cel) {
+  var col = index(cel);
+  return data[col.y][col.x - 1];
+}
+
+export function afterx(cel) {
+  var col = index(cel);
+  return data[col.y][col.x + 1];
 }
 
 export function position(ev) {

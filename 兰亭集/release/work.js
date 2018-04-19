@@ -23,6 +23,11 @@
     };
   }
 
+  function beforex(cel) {
+    var col = index(cel);
+    return data[col.y][col.x - 1];
+  }
+
   function position(ev) {
     var x, y;
     if (ev.layerX || ev.layerX == 0) {
@@ -121,7 +126,7 @@
       return rows;
     },
     redatax: function redatax(rows, col, offset) {
-      var l = index(col).x - 1;
+      var l = index(col).x;
       rows.forEach(function (cels) {
         var cel = cels[l];
         cel.width = cel.width + offset;
@@ -432,17 +437,29 @@
     var startx, col, start;
 
     function mousedown(ev) {
-      start = cell(ev.pageX, ev.pageY);
-      startx = start.x;
-      canva.off("mousedown", mousedown);
       doc.mouseup(mouseup);
+      canva.off("mousedown", mousedown);
+
+      var cel = cell(ev.pageX, ev.pageY);
+      if (Math.abs(cel.x + cel.width - ev.pageX) < 8) {
+        start = cel;
+        startx = start.x + start.width;
+      } else if (Math.abs(cel.x - ev.pageX) < 8) {
+        start = beforex(cel);
+        startx = start.x + start.width;
+      }
     }
 
     function mousemove(ev) {
       if (start) return;
       var cel = cell(ev.pageX, ev.pageY);
       if (cel) {
-        if (Math.abs(cel.x - ev.pageX) < 16 && index(cel).y == 0) {
+        if (Math.abs(cel.x + cel.width - ev.pageX) < 8 && index(cel).y == 0) {
+          canva.css({ cursor: "col-resize" });
+          if (col) return;
+          canva.mousedown(mousedown);
+          col = cel;
+        } else if (Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
           canva.css({ cursor: "col-resize" });
           if (col) return;
           canva.mousedown(mousedown);

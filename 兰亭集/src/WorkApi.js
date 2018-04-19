@@ -33,7 +33,7 @@ export let api = {
     return rows;
   },
   redatax: function (rows, col, offset) {
-    var i = -1, l = index(col).x - 1;
+    var i = -1, l = index(col).x;
     rows.forEach(cels => {
       var cel = cels[l];
       cel.width = cel.width + offset;
