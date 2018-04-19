@@ -34,13 +34,22 @@
       height: calc(100vh);
     }
 
-    .sm-sheet-scrollbar-horizontal{
-      background-color: #e2e2e2!important;;
+    .sm-sheet-scrollbar-horizontal {
+      background-color: #e2e2e2!important;
       position: relative;
     }
+
     .sm-sheet-scrollbar-vertical {
-      background-color: #e2e2e2!important;;
+      background-color: #e2e2e2!important;
       position: relative;
+    }
+
+    .split-vertical {
+      width: 1px;
+      height: calc(100vh);
+      background-color: #006dff;
+      position: absolute;
+      display: none;
     }
   </style>
 </head>
@@ -68,6 +77,7 @@
     </tr>
   </table>
   <textarea></textarea>
+  <div class="split-vertical"></div>
 </body>
 <script type="text/javascript" src="../../release/es.work.js"></script>
 

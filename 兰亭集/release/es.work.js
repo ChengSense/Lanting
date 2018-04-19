@@ -424,12 +424,14 @@ function scrollY() {
 
 function resizex() {
   let canva = $("canvas");
+  let split = $(".split-vertical");
   var doc = $(document);
   var startx, col, start;
 
   function mousedown(ev) {
     doc.mouseup(mouseup);
     canva.off("mousedown", mousedown);
+    split.show();
 
     var cel = cell(ev.pageX, ev.pageY);
     if (Math.abs(cel.x + cel.width - ev.pageX) < 8) {
@@ -442,7 +444,7 @@ function resizex() {
   }
 
   function mousemove(ev) {
-    if (start) return;
+    if (start) return split.css({ left: ev.pageX, top: 0 });
     var cel = cell(ev.pageX, ev.pageY);
     if (cel) {
       if (Math.abs(cel.x + cel.width - ev.pageX) < 8 && index(cel).y == 0) {
@@ -456,7 +458,6 @@ function resizex() {
         canva.mousedown(mousedown);
         col = cel;
       } else {
-        if (start) return;
         canva.css({ cursor: "default" });
         canva.off("mousedown", mousedown);
         col = null;
@@ -471,6 +472,7 @@ function resizex() {
     api.redata(data);
     render();
     start = null;
+    split.hide();
     doc.off("mouseup", mouseup);
   }
 
