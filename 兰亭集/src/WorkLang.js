@@ -44,6 +44,12 @@ export function setting(object, src) {
   return object;
 }
 
+export function getWidth() {
+  var cels = data[0];
+  var cel = cels[cels.length - 1];
+  return cel.x + cel.width;
+}
+
 export function position(ev) {
   var x, y;
   if (ev.layerX || ev.layerX == 0) {
