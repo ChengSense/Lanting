@@ -12,11 +12,11 @@ export function scrollX() {
   controller.mousedown(mousedown);
 
   function mousedown(ev) {
+    col = cell(ev.pageX, ev.pageY);
+    if (!col) return;
     startx = ev.offsetX;
     starty = ev.pageY;
-    col = cell(ev.pageX, ev.pageY);
-    if (col)
-      doc.mousemove(mousemove).mouseup(mouseup);
+    doc.mousemove(mousemove).mouseup(mouseup);
   }
 
   function mousemove(ev) {
@@ -28,11 +28,11 @@ export function scrollX() {
 
   function display(offset) {
     var cel = cell(offset, starty);
-    if (cel) {
-      col = cel;
-      scel.x = cel.x;
-      shape.scrollX(col, scel);
-    }
+    if (col == cel) return;
+    console.log(`cel=${JSON.stringify(col.x + col.width - offset)}`)
+    scel.x = cel.x;
+    shape.scrollX(cel, scel);
+    col = cel;
   }
 
   function mouseup() {
@@ -48,11 +48,11 @@ export function scrollY() {
   controller.mousedown(mousedown);
 
   function mousedown(ev) {
+    col = cell(ev.pageX, ev.pageY);
+    if (!col) return;
     startx = ev.pageX;
     starty = ev.offsetY;
-    col = cell(ev.pageX, ev.pageY);
-    if (col)
-      doc.mousemove(mousemove).mouseup(mouseup);
+    doc.mousemove(mousemove).mouseup(mouseup);
   }
 
   function mousemove(ev) {
@@ -64,11 +64,10 @@ export function scrollY() {
 
   function display(offset) {
     var cel = cell(startx, offset);
-    if (cel) {
-      col = cel;
-      scel.y = cel.y;
-      shape.scrollY(col, scel);
-    }
+    if (col == cel) return;
+    scel.y = cel.y;
+    shape.scrollY(cel, scel);
+    col = cel;
   }
 
   function mouseup() {

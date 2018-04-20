@@ -1,12 +1,11 @@
 function cell(x, y) {
-  while (y--) {
+  for (; 0 <= y; y--) {
     var row = map[y];
     if (row) {
-      while (x--) {
+      for (; 0 <= x; x--) {
         var cel = row[x];
-        if (cel) {
+        if (cel)
           return cel;
-        }
       }
     }
   }
@@ -40,18 +39,6 @@ function beforey(cel) {
 function setting(object, src) {
   for (var key in src) object[key] = src[key];
   return object;
-}
-
-function position(ev) {
-  var x, y;
-  if (ev.layerX || ev.layerX == 0) {
-    x = ev.layerX;
-    y = ev.layerY;
-  } else if (ev.offsetX || ev.offsetX == 0) {
-    x = ev.offsetX;
-    y = ev.offsetY;
-  }
-  return { x: x, y: y };
 }
 
 var numberCanvas = document.createElement("canvas");
@@ -221,11 +208,6 @@ function drawText(rows) {
   });
 }
 
-function textEdit(cel) {
-  textContext.clearRect(cel.x, cel.y, cel.width, cel.height);
-  textContext.fillText(cel.text, cel.x + 3, cel.y + 15);
-}
-
 var headerCanvas = document.createElement("canvas");
 var headerContext = headerCanvas.getContext("2d");
 
@@ -377,11 +359,11 @@ function scrollX() {
   controller.mousedown(mousedown);
 
   function mousedown(ev) {
+    col = cell(ev.pageX, ev.pageY);
+    if (!col) return;
     startx = ev.offsetX;
     starty = ev.pageY;
-    col = cell(ev.pageX, ev.pageY);
-    if (col)
-      doc.mousemove(mousemove).mouseup(mouseup);
+    doc.mousemove(mousemove).mouseup(mouseup);
   }
 
   function mousemove(ev) {
@@ -393,11 +375,11 @@ function scrollX() {
 
   function display(offset) {
     var cel = cell(offset, starty);
-    if (cel) {
-      col = cel;
-      scel.x = cel.x;
-      shape.scrollX(col, scel);
-    }
+    if (col == cel) return;
+    console.log(`cel=${JSON.stringify(col.x + col.width - offset)}`);
+    scel.x = cel.x;
+    shape.scrollX(cel, scel);
+    col = cel;
   }
 
   function mouseup() {
@@ -413,11 +395,11 @@ function scrollY() {
   controller.mousedown(mousedown);
 
   function mousedown(ev) {
+    col = cell(ev.pageX, ev.pageY);
+    if (!col) return;
     startx = ev.pageX;
     starty = ev.offsetY;
-    col = cell(ev.pageX, ev.pageY);
-    if (col)
-      doc.mousemove(mousemove).mouseup(mouseup);
+    doc.mousemove(mousemove).mouseup(mouseup);
   }
 
   function mousemove(ev) {
@@ -429,11 +411,10 @@ function scrollY() {
 
   function display(offset) {
     var cel = cell(startx, offset);
-    if (cel) {
-      col = cel;
-      scel.y = cel.y;
-      shape.scrollY(col, scel);
-    }
+    if (col == cel) return;
+    scel.y = cel.y;
+    shape.scrollY(cel, scel);
+    col = cel;
   }
 
   function mouseup() {
@@ -486,15 +467,15 @@ function resizex() {
 
   function mouseup(ev) {
     if (!start) return;
+    doc.off("mouseup", mouseup);
     var offset = parseInt(ev.pageX - startx);
     api.resetWidth(data, start, offset);
     api.resetData(data);
+    split.hide();
     render();
     start = null;
-    split.hide();
-    doc.off("mouseup", mouseup);
   }
-
+  
   canva.mousemove(mousemove);
 }
 
@@ -558,68 +539,12 @@ function resizey() {
 let canva = $("canvas");
 let textarea = $("textarea");
 
-var cel = {};
-
 function action() {
-  selectArea();
+  //selectArea();
   scrollX();
   scrollY();
   resizex();
   resizey();
-}
-
-function selectArea() {
-  var col;
-  canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
-  function mousedown(ev) {
-    var p = position(ev);
-    textarea.hide();
-    cel = col = cell(p.x, p.y);
-    if (cel && (index(col).x < 0 || index(col).y < 0)) {
-      shape.render(cel);
-    }
-    canva.mousemove(mousemove);
-  }
-
-  function mousemove(ev) {
-    var p = position(ev);
-    if ((col.x + col.width) < p.x || (col.y + col.height) < p.y) {
-      col = cell(p.x, p.y);
-      if (col) {
-        shape.area(cel, col);
-      }
-    }
-  }
-
-  function mouseup(ev) {
-    canva.off("mousemove", mousemove);
-    textarea.off("change");
-  }
-}
-
-function edit(ev) {
-  var p = position(ev);
-  var cel = cell(p.x, p.y);
-  if (cel) {
-    setTextArea(cel);
-    textChange(cel);
-  }
-}
-
-function setTextArea(cel) {
-  var top = cel.y + canva.position().top;
-  var left = cel.x + canva.position().left;
-  textarea.show().focus();
-  textarea.css({ left: left+2, top: top+2, width: cel.width - 6, height: cel.height - 6 });
-  textarea.val(cel.text);
-}
-
-function textChange(cel) {
-  textarea.change(function () {
-    cel.text = this.value;
-    textEdit(cel);
-    shape.render();
-  });
 }
 
 var width;

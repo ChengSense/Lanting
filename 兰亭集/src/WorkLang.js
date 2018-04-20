@@ -2,14 +2,13 @@ import { map } from "./WorkApi";
 import { data } from "./WorkInit";
 
 export function cell(x, y) {
-  while (y--) {
+  for (; 0 <= y; y--) {
     var row = map[y];
     if (row) {
-      while (x--) {
+      for (; 0 <= x; x--) {
         var cel = row[x];
-        if (cel) {
+        if (cel)
           return cel;
-        }
       }
     }
   }

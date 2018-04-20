@@ -11,7 +11,7 @@ let textarea = $("textarea");
 export var cel = {};
 
 export function action() {
-  selectArea();
+  //selectArea();
   scrollX();
   scrollY();
   resizex();
@@ -22,13 +22,13 @@ function selectArea() {
   var col;
   canva.mousedown(mousedown).mouseup(mouseup).dblclick(edit);
   function mousedown(ev) {
-    var p = position(ev);
     textarea.hide();
+    var p = position(ev);
     cel = col = cell(p.x, p.y);
-    if (cel && (index(col).x < 0 || index(col).y < 0)) {
+    if (cel && (0 < index(col).x && 0 < index(col).y)) {
       shape.render(cel);
+      canva.mousemove(mousemove);
     }
-    canva.mousemove(mousemove);
   }
 
   function mousemove(ev) {
@@ -60,7 +60,7 @@ function setTextArea(cel) {
   var top = cel.y + canva.position().top;
   var left = cel.x + canva.position().left;
   textarea.show().focus();
-  textarea.css({ left: left+2, top: top+2, width: cel.width - 6, height: cel.height - 6 });
+  textarea.css({ left: left + 2, top: top + 2, width: cel.width - 6, height: cel.height - 6 });
   textarea.val(cel.text);
 }
 

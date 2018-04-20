@@ -50,15 +50,15 @@ export function resizex() {
 
   function mouseup(ev) {
     if (!start) return;
+    doc.off("mouseup", mouseup);
     var offset = parseInt(ev.pageX - startx);
     api.resetWidth(data, start, offset);
     api.resetData(data);
+    split.hide();
     render();
     start = null;
-    split.hide();
-    doc.off("mouseup", mouseup);
   }
-
+  
   canva.mousemove(mousemove);
 }
 
