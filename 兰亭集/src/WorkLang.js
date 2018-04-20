@@ -2,16 +2,24 @@ import { map } from "./WorkApi";
 import { data } from "./WorkInit";
 
 export function cell(x, y) {
-  var cel, l = y;
-  while (l--) {
-    var i = x;
-    while (i--) {
-      cel = map[`${i}&${l}`];
-      if (cel) {
-        return cel;
+  while (y--) {
+    var row = map[y];
+    if (row) {
+      while (x--) {
+        var cel = row[x];
+        if (cel) {
+          return cel;
+        }
       }
     }
   }
+}
+
+export function setMap(x, y, cel) {
+  x = parseInt(x), y = parseInt(y);
+  let rows = map[y] || {};
+  map[y] = rows;
+  rows[x] = cel;
 }
 
 export function index(cel) {
@@ -32,6 +40,11 @@ export function beforey(cel) {
   return data[col.y - 1][col.x];
 }
 
+export function setting(object, src) {
+  for (var key in src) object[key] = src[key];
+  return object;
+}
+
 export function position(ev) {
   var x, y;
   if (ev.layerX || ev.layerX == 0) {
@@ -42,9 +55,4 @@ export function position(ev) {
     y = ev.offsetY;
   }
   return { x: x, y: y };
-}
-
-export function setting(object, src) {
-  for (var key in src) object[key] = src[key];
-  return object;
 }

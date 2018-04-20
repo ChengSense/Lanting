@@ -2,17 +2,24 @@
   'use strict';
 
   function cell(x, y) {
-    var cel,
-        l = y;
-    while (l--) {
-      var i = x;
-      while (i--) {
-        cel = map[i + "&" + l];
-        if (cel) {
-          return cel;
+    while (y--) {
+      var row = map[y];
+      if (row) {
+        while (x--) {
+          var cel = row[x];
+          if (cel) {
+            return cel;
+          }
         }
       }
     }
+  }
+
+  function setMap(x, y, cel) {
+    x = parseInt(x), y = parseInt(y);
+    var rows = map[y] || {};
+    map[y] = rows;
+    rows[x] = cel;
   }
 
   function index(cel) {
@@ -33,6 +40,12 @@
     return data[col.y - 1][col.x];
   }
 
+  function setting(object, src) {
+    for (var key in src) {
+      object[key] = src[key];
+    }return object;
+  }
+
   function position(ev) {
     var x, y;
     if (ev.layerX || ev.layerX == 0) {
@@ -43,12 +56,6 @@
       y = ev.offsetY;
     }
     return { x: x, y: y };
-  }
-
-  function setting(object, src) {
-    for (var key in src) {
-      object[key] = src[key];
-    }return object;
   }
 
   var numberCanvas = document.createElement("canvas");
@@ -96,6 +103,7 @@
   }
 
   var map = {};
+
   var api = {
     data: function data$$1(row, cel) {
       row = row || 50, cel = cel || 50;
@@ -123,7 +131,7 @@
             col;
         cels.forEach(function (cel) {
           col = cel, cel.x = x, cel.y = y;
-          map[parseInt(cel.x) + "&" + parseInt(cel.y)] = cel;
+          setMap(x, y, col);
           x = x + cel.width;
         });
         y = y + col.height;
@@ -189,7 +197,7 @@
         text: i + ":" + l
       };
     }
-    map[parseInt(col.x) + "&" + parseInt(col.y)] = col;
+    setMap(x, y, col);
     return col;
   }
 

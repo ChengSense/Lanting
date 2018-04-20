@@ -1,8 +1,9 @@
 import { number as num } from "./WorkGridNumber";
 import { alphabet as alph } from "./WorkInit";
-import { index } from "./WorkLang";
+import { index, setMap } from "./WorkLang";
 
 export var map = {};
+
 export let api = {
   data: function (row, cel) {
     row = row || 50, cel = cel || 50
@@ -25,7 +26,7 @@ export let api = {
       var x = 0.5, col;
       cels.forEach(cel => {
         col = cel, cel.x = x, cel.y = y;
-        map[`${parseInt(cel.x)}&${parseInt(cel.y)}`] = cel;
+        setMap(x, y, col);
         x = x + cel.width;
       });
       y = y + col.height;
@@ -91,6 +92,6 @@ function setCel(i, l, x, y, width, height) {
       text: `${i}:${l}`
     }
   }
-  map[`${parseInt(col.x)}&${parseInt(col.y)}`] = col;
+  setMap(x, y, col);
   return col;
 }
