@@ -28,6 +28,11 @@
     return data[col.y][col.x - 1];
   }
 
+  function beforey(cel) {
+    var col = index(cel);
+    return data[col.y - 1][col.x];
+  }
+
   function position(ev) {
     var x, y;
     if (ev.layerX || ev.layerX == 0) {
@@ -110,7 +115,7 @@
       }
       return rows;
     },
-    redata: function redata(rows) {
+    resetData: function resetData(rows) {
       map = {};
       var y = 0.5;
       rows.forEach(function (cels) {
@@ -125,13 +130,18 @@
       });
       return rows;
     },
-    redatax: function redatax(rows, col, offset) {
+    resetWidth: function resetWidth(rows, col, offset) {
       var l = index(col).x;
       rows.forEach(function (cels) {
         var cel = cels[l];
         cel.width = cel.width + offset;
       });
-      return rows;
+    },
+    resetHeight: function resetHeight(rows, col, offset) {
+      var l = index(col).y;
+      rows[l].forEach(function (cel) {
+        cel.height = cel.height + offset;
+      });
     },
     title: function title() {
       var list = [""].concat(alphabet);
@@ -432,8 +442,8 @@
   }
 
   function resizex() {
-    var canva = $("canvas");
     var split = $(".split-vertical");
+    var canva = $("canvas");
     var doc = $(document);
     var startx, col, start;
 
@@ -466,7 +476,7 @@
           if (col) return;
           canva.mousedown(mousedown);
           col = cel;
-        } else {
+        } else if (0 < index(cel).x) {
           canva.css({ cursor: "default" });
           canva.off("mousedown", mousedown);
           col = null;
@@ -477,12 +487,69 @@
     function mouseup(ev) {
       if (!start) return;
       var offset = parseInt(ev.pageX - startx);
-      api.redatax(data, start, offset);
-      api.redata(data);
+      api.resetWidth(data, start, offset);
+      api.resetData(data);
       render();
       start = null;
       split.hide();
       doc.off("mouseup", mouseup);
+    }
+
+    canva.mousemove(mousemove);
+  }
+
+  function resizey() {
+    var split = $(".split-horizontal");
+    var canva = $("canvas");
+    var doc = $(document);
+    var starty, col, start;
+
+    function mousedown(ev) {
+      canva.off("mousedown", mousedown);
+      doc.mouseup(mouseup);
+      split.show();
+
+      var cel = cell(ev.pageX, ev.pageY);
+      if (Math.abs(cel.y + cel.height - ev.pageY) < 8) {
+        start = cel;
+        starty = start.y + start.height;
+      } else if (Math.abs(cel.y - ev.pageY) < 8) {
+        start = beforey(cel);
+        starty = start.y + start.height;
+      }
+    }
+
+    function mousemove(ev) {
+      if (start) return split.css({ left: 0, top: ev.pageY });
+      var cel = cell(ev.pageX, ev.pageY);
+      if (cel) {
+        if (Math.abs(cel.y + cel.height - ev.pageY) < 8 && index(cel).x == 0) {
+          canva.css({ cursor: "row-resize" });
+          if (col) return;
+          canva.mousedown(mousedown);
+          col = cel;
+        } else if (Math.abs(cel.y - ev.pageY) < 8 && index(cel).x == 0) {
+          canva.css({ cursor: "row-resize" });
+          if (col) return;
+          canva.mousedown(mousedown);
+          col = cel;
+        } else if (0 < index(cel).y) {
+          canva.css({ cursor: "default" });
+          canva.off("mousedown", mousedown);
+          col = null;
+        }
+      }
+    }
+
+    function mouseup(ev) {
+      if (!start) return;
+      doc.off("mouseup", mouseup);
+      var offset = parseInt(ev.pageY - starty);
+      api.resetHeight(data, start, offset);
+      api.resetData(data);
+      split.hide();
+      render();
+      start = null;
     }
 
     canva.mousemove(mousemove);
@@ -498,6 +565,7 @@
     scrollX();
     scrollY();
     resizex();
+    resizey();
   }
 
   function selectArea() {
@@ -542,7 +610,7 @@
     var top = cel.y + canva.position().top;
     var left = cel.x + canva.position().left;
     textarea.show().focus();
-    textarea.css({ left: left, top: top, width: "116px", height: "26px" });
+    textarea.css({ left: left + 2, top: top + 2, width: cel.width - 6, height: cel.height - 6 });
     textarea.val(cel.text);
   }
 

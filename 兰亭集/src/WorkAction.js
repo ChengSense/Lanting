@@ -2,7 +2,7 @@ import { width, height } from "./WorkInit";
 import { cell, position, index } from "./WorkLang";
 import { textEdit } from "./WorkText";
 import { scrollX, scrollY } from "./WorkScroll";
-import { resizex } from "./WorkResize";
+import { resizex, resizey } from "./WorkResize";
 import { shape } from "./WorkShape";
 
 let canva = $("canvas");
@@ -15,6 +15,7 @@ export function action() {
   scrollX();
   scrollY();
   resizex();
+  resizey();
 }
 
 function selectArea() {
@@ -46,7 +47,6 @@ function selectArea() {
   }
 }
 
-
 function edit(ev) {
   var p = position(ev);
   var cel = cell(p.x, p.y);
@@ -60,7 +60,7 @@ function setTextArea(cel) {
   var top = cel.y + canva.position().top;
   var left = cel.x + canva.position().left;
   textarea.show().focus();
-  textarea.css({ left: left, top: top, width: "116px", height: "26px" });
+  textarea.css({ left: left+2, top: top+2, width: cel.width - 6, height: cel.height - 6 });
   textarea.val(cel.text);
 }
 

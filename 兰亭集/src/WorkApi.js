@@ -18,7 +18,7 @@ export let api = {
     }
     return rows;
   },
-  redata: function (rows) {
+  resetData: function (rows) {
     map = {};
     var y = 0.5;
     rows.forEach(cels => {
@@ -32,13 +32,18 @@ export let api = {
     });
     return rows;
   },
-  redatax: function (rows, col, offset) {
-    var i = -1, l = index(col).x;
+  resetWidth: function (rows, col, offset) {
+    var l = index(col).x;
     rows.forEach(cels => {
       var cel = cels[l];
       cel.width = cel.width + offset;
     });
-    return rows;
+  },
+  resetHeight: function (rows, col, offset) {
+    var l = index(col).y;
+    rows[l].forEach(cel => {
+      cel.height = cel.height + offset;
+    });
   },
   title: function () {
     var list = [""].concat(alph);

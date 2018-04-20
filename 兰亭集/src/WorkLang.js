@@ -27,9 +27,9 @@ export function beforex(cel) {
   return data[col.y][col.x - 1];
 }
 
-export function afterx(cel) {
+export function beforey(cel) {
   var col = index(cel);
-  return data[col.y][col.x + 1];
+  return data[col.y - 1][col.x];
 }
 
 export function position(ev) {
