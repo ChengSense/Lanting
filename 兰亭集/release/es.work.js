@@ -41,6 +41,17 @@ function setting(object, src) {
   return object;
 }
 
+function getWidth() {
+  var cels = data[0];
+  var cel = cels[cels.length - 1];
+  return cel.x + cel.width;
+}
+
+function getHeight() {
+  var cel = data[data.length - 1][0];
+  return cel.y + cel.height;
+}
+
 var numberCanvas = document.createElement("canvas");
 var numberContext = numberCanvas.getContext("2d");
 
@@ -354,16 +365,17 @@ var scel = { x: 0.5, y: 0.5 };
 function scrollX() {
   var controller = $(".sm-sheet-scrollbar-horizontal");
   var doc = $(document);
-  var startx, starty, col;
+  var startx, starty, col, scale;
 
   controller.mousedown(mousedown);
 
   function mousedown(ev) {
     col = cell(ev.pageX, ev.pageY);
     if (!col) return;
+    doc.mousemove(mousemove).mouseup(mouseup);
+    scale = (getWidth() - width) / (width - controller.width());
     startx = ev.offsetX;
     starty = ev.pageY;
-    doc.mousemove(mousemove).mouseup(mouseup);
   }
 
   function mousemove(ev) {
@@ -374,9 +386,9 @@ function scrollX() {
   }
 
   function display(offset) {
+    offset = parseInt(scale * offset);
     var cel = cell(offset, starty);
     if (col == cel) return;
-    console.log(`cel=${JSON.stringify(col.x + col.width - offset)}`);
     scel.x = cel.x;
     shape.scrollX(cel, scel);
     col = cel;
@@ -390,16 +402,17 @@ function scrollX() {
 function scrollY() {
   var controller = $(".sm-sheet-scrollbar-vertical");
   var doc = $(document);
-  var startx, starty, col;
+  var startx, starty, col, scale;
 
   controller.mousedown(mousedown);
 
   function mousedown(ev) {
     col = cell(ev.pageX, ev.pageY);
     if (!col) return;
+    doc.mousemove(mousemove).mouseup(mouseup);
+    scale = (getHeight() - height) / (height - controller.height());
     startx = ev.pageX;
     starty = ev.offsetY;
-    doc.mousemove(mousemove).mouseup(mouseup);
   }
 
   function mousemove(ev) {
@@ -410,6 +423,7 @@ function scrollY() {
   }
 
   function display(offset) {
+    offset = parseInt(scale * offset);
     var cel = cell(startx, offset);
     if (col == cel) return;
     scel.y = cel.y;

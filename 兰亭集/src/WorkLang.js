@@ -50,6 +50,11 @@ export function getWidth() {
   return cel.x + cel.width;
 }
 
+export function getHeight() {
+  var cel = data[data.length - 1][0];
+  return cel.y + cel.height;
+}
+
 export function position(ev) {
   var x, y;
   if (ev.layerX || ev.layerX == 0) {
