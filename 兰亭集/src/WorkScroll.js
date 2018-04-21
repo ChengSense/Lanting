@@ -33,7 +33,7 @@ export function scrollX() {
     var cel = cell(offset, starty);
     if (col == cel) return;
     scel.x = cel.x;
-    shape.scrollX(cel, scel);
+    shape.render();
     col = cel;
   }
 
@@ -70,7 +70,7 @@ export function scrollY() {
     var cel = cell(startx, offset);
     if (col == cel) return;
     scel.y = cel.y;
-    shape.scrollY(cel, scel);
+    shape.render();
     col = cel;
   }
 

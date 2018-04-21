@@ -1,5 +1,6 @@
 import { map } from "./WorkApi";
 import { data } from "./WorkInit";
+import { scel } from "./WorkScroll";
 
 export function cell(x, y) {
   for (; 0 <= y; y--) {
@@ -64,5 +65,5 @@ export function position(ev) {
     x = ev.offsetX;
     y = ev.offsetY;
   }
-  return { x: x, y: y };
+  return { x: x + parseInt(scel.x), y: y + parseInt(scel.y) };
 }
