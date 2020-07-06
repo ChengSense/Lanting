@@ -1,6 +1,5 @@
 import { map } from "./WorkApi";
-import { data } from "./WorkInit";
-import { scel } from "./WorkScroll";
+import { data, scel } from "./WorkUI";
 
 export function cell(x, y) {
   for (; 0 <= y; y--) {
@@ -38,11 +37,6 @@ export function beforex(cel) {
 export function beforey(cel) {
   var col = index(cel);
   return data[col.y - 1][col.x];
-}
-
-export function setting(object, src) {
-  for (var key in src) object[key] = src[key];
-  return object;
 }
 
 export function getWidth() {

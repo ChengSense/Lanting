@@ -7,16 +7,15 @@
     "example": "example"
   },
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "nodemon": "^1.17.3",
-    "rollup-plugin-babel": "^3.0.3",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-uglify": "^3.0.0"
   },
   "devDependencies": {},
   "scripts": {
-    "build": "nodemon --exec rollup -c",
+    "build": "rollup -c --watch ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

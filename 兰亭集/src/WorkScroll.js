@@ -1,9 +1,6 @@
 
 import { cell, getWidth, getHeight } from "./WorkLang";
-import { shape } from "./WorkShape";
-import { width, height } from "./WorkInit";
-
-export var scel = { x: 0.5, y: 0.5 };
+import { width, height, scel, sheet } from "./WorkUI";
 
 export function scrollX() {
   var controller = $(".sm-sheet-scrollbar-horizontal");
@@ -33,7 +30,7 @@ export function scrollX() {
     var cel = cell(offset, starty);
     if (col == cel) return;
     scel.x = cel.x;
-    shape.render();
+    sheet.layer();
     col = cel;
   }
 
@@ -70,7 +67,7 @@ export function scrollY() {
     var cel = cell(startx, offset);
     if (col == cel) return;
     scel.y = cel.y;
-    shape.render();
+    sheet.layer();
     col = cel;
   }
 
@@ -78,6 +75,5 @@ export function scrollY() {
     doc.off("mousemove", mousemove).off("mouseup", mouseup);
   }
 }
-
 
 

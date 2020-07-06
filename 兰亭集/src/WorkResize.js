@@ -1,19 +1,17 @@
 
 import { cell, index, beforex, beforey } from "./WorkLang";
-import { data, render } from "./WorkInit";
+import { data, sheet } from "./WorkUI";
 import { api } from "./WorkApi";
-
-export var scel = { x: 0.5, y: 0.5 };
 
 export function resizex() {
   let split = $(".split-vertical");
-  let canva = $("canvas");
+  let canvas = $("canvas");
   var doc = $(document);
   var startx, starty, col, start;
 
   function mousedown(ev) {
     doc.mouseup(mouseup);
-    canva.off("mousedown", mousedown);
+    canvas.off("mousedown", mousedown);
     split.show();
 
     var cel = cell(ev.pageX, ev.pageY);
@@ -31,18 +29,18 @@ export function resizex() {
     var cel = cell(ev.pageX, ev.pageY);
     if (cel) {
       if (Math.abs(cel.x + cel.width - ev.pageX) < 8 && index(cel).y == 0) {
-        canva.css({ cursor: "col-resize" });
+        canvas.css({ cursor: "col-resize" });
         if (col) return;
-        canva.mousedown(mousedown);
+        canvas.mousedown(mousedown);
         col = cel;
       } else if (Math.abs(cel.x - ev.pageX) < 8 && index(cel).y == 0) {
-        canva.css({ cursor: "col-resize" });
+        canvas.css({ cursor: "col-resize" });
         if (col) return;
-        canva.mousedown(mousedown);
+        canvas.mousedown(mousedown);
         col = cel;
       } else if (0 < index(cel).x) {
-        canva.css({ cursor: "default" });
-        canva.off("mousedown", mousedown);
+        canvas.css({ cursor: "default" });
+        canvas.off("mousedown", mousedown);
         col = null;
       }
     }
@@ -55,21 +53,21 @@ export function resizex() {
     api.resetWidth(data, start, offset);
     api.resetData(data);
     split.hide();
-    render();
+    sheet.layer();
     start = null;
   }
-  
-  canva.mousemove(mousemove);
+
+  canvas.mousemove(mousemove);
 }
 
 export function resizey() {
   let split = $(".split-horizontal");
-  let canva = $("canvas");
+  let canvas = $("canvas");
   var doc = $(document);
   var startx, starty, col, start;
 
   function mousedown(ev) {
-    canva.off("mousedown", mousedown);
+    canvas.off("mousedown", mousedown);
     doc.mouseup(mouseup);
     split.show();
 
@@ -88,18 +86,18 @@ export function resizey() {
     var cel = cell(ev.pageX, ev.pageY);
     if (cel) {
       if (Math.abs(cel.y + cel.height - ev.pageY) < 8 && index(cel).x == 0) {
-        canva.css({ cursor: "row-resize" });
+        canvas.css({ cursor: "row-resize" });
         if (col) return;
-        canva.mousedown(mousedown);
+        canvas.mousedown(mousedown);
         col = cel;
       } else if (Math.abs(cel.y - ev.pageY) < 8 && index(cel).x == 0) {
-        canva.css({ cursor: "row-resize" });
+        canvas.css({ cursor: "row-resize" });
         if (col) return;
-        canva.mousedown(mousedown);
+        canvas.mousedown(mousedown);
         col = cel;
       } else if (0 < index(cel).y) {
-        canva.css({ cursor: "default" });
-        canva.off("mousedown", mousedown);
+        canvas.css({ cursor: "default" });
+        canvas.off("mousedown", mousedown);
         col = null;
       }
     }
@@ -112,10 +110,10 @@ export function resizey() {
     api.resetHeight(data, start, offset);
     api.resetData(data);
     split.hide();
-    render();
+    sheet.layer();
     start = null;
   }
 
-  canva.mousemove(mousemove);
+  canvas.mousemove(mousemove);
 }
 

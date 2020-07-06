@@ -1,12 +1,11 @@
-import { number as num } from "./WorkGridNumber";
-import { alphabet as alph } from "./WorkInit";
+import { alphabet as alph ,number as num } from "./WorkUI";
 import { index, setMap } from "./WorkLang";
 
 export var map = {};
 
 export let api = {
   data: function (row, cel) {
-    row = row || 50, cel = cel || 50
+    row = row || 500, cel = cel || 50
     var i = -1, y = 0.5, rows = [];
     while (++i < row) {
       var l = -1, x = 0.5, cels = [];

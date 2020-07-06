@@ -1,9 +1,7 @@
-import { width, height } from "./WorkInit";
-import { cell, position, index } from "./WorkLang";
-import { textEdit } from "./WorkText";
-import { scrollX, scrollY, scel } from "./WorkScroll";
+import { scrollX, scrollY } from "./WorkScroll";
 import { resizex, resizey } from "./WorkResize";
-import { shape } from "./WorkShape";
+import { cell, position, index } from "./WorkLang";
+import { sheet, text, scel } from "./WorkUI";
 
 let canva = $("canvas");
 let textarea = $("textarea");
@@ -24,7 +22,7 @@ function selectArea() {
     var p = position(ev);
     start = col = cell(p.x, p.y);
     if (start && (0 < index(col).x && 0 < index(col).y)) {
-      shape.border(start);
+      sheet.border(start);
       canva.mousemove(mousemove);
     }
   }
@@ -33,7 +31,7 @@ function selectArea() {
     var p = position(ev);
     var cel = cell(p.x, p.y);
     if (col == cel) return;
-    shape.area(start, cel);
+    sheet.area(start, cel);
     col = cel;
   }
 
@@ -62,7 +60,7 @@ function setTextArea(cel) {
 function textChange(cel) {
   textarea.change(function () {
     cel.text = this.value;
-    textEdit(cel);
-    shape.render();
+    text.retext(cel);
+    sheet.layer();
   });
 }

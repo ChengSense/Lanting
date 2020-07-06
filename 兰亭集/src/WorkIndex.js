@@ -1,3 +1,2 @@
-import { init } from "./WorkInit";
-
+import { init } from "./WorkUI";
 init();
